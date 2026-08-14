@@ -95,19 +95,32 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
 
 export const api = {
   getProducts: async (): Promise<Product[]> => {
-    return fetchAPI('/products', { next: { revalidate: 60 } }); // Optional revalidation
+    try {
+      const data = await fetchAPI('/products', { next: { revalidate: 60 } });
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      console.error('Error fetching products:', e);
+      return [];
+    }
   },
 
   getProduct: async (slug: string): Promise<Product | null> => {
     try {
       return await fetchAPI(`/products/${slug}`, { next: { revalidate: 60 } });
     } catch (e) {
+      console.error('Error fetching product:', e);
       return null;
     }
   },
 
   getCategories: async (): Promise<Category[]> => {
-    return fetchAPI('/categories', { next: { revalidate: 3600 } });
+    try {
+      const data = await fetchAPI('/categories', { next: { revalidate: 3600 } });
+      return Array.isArray(data) ? data : [];
+    } catch (e) {
+      console.error('Error fetching categories:', e);
+      return [];
+    }
   },
 
   getCategory: async (slug: string): Promise<Category | null> => {
