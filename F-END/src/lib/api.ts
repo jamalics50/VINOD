@@ -73,7 +73,7 @@ export interface Inquiry {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
-async function fetchAPI(endpoint: string, options: RequestInit = {}) {
+async function fetchAPI<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const url = `${API_URL}${endpoint}`;
   const response = await fetch(url, {
     ...options,
@@ -91,6 +91,7 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   if (response.status !== 204) {
     return response.json();
   }
+  return undefined as unknown as T;
 }
 
 export const api = {
